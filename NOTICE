@@ -1,0 +1,28 @@
+Cycle Calendar
+Copyright 2026 Kristian Mario Miskovic (TekiDeki)
+https://github.com/TekiDeki/Cycle-Calendar
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+--------------------------------------------------------------------------
+Third-party software
+--------------------------------------------------------------------------
+
+None. The application is a single HTML file built from the sources in this
+repository: HTML and CSS written for this project, a translation table with
+four locales, and plain JavaScript. It bundles no library, no framework, no
+analytics and no font file, and it loads nothing from the network at runtime -
+not even a CDN copy of anything.
+
+The date arithmetic, the cycle grouping, the statistics (mean, median, standard
+deviation) and the prediction model are written for this project. They follow
+the arithmetic described in the public documentation of calendar dates and do
+not include code from any date library.
+
+--------------------------------------------------------------------------
+External services
+--------------------------------------------------------------------------
+
+None. Every entry is written to localStorage on the device that made it. No
+cycle date, symptom, note or temperature is ever transmitted. Export is a file
+you download yourself; import reads a file you choose.

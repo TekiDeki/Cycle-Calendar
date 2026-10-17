@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#8d2f5b">
+<title>Cycle Calendar · menstrual calendar with private predictions</title>
+<meta name="description" content="A calm, professional menstrual calendar. Log periods, flow, symptoms and basal temperature. Predictions computed on your own averages. Everything stays in this browser.">
+<meta name="author" content="Kristian Mario Miskovic (TekiDeki)">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tekideki.github.io/Cycle-Calendar/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Cycle Calendar">
+<meta property="og:title" content="Cycle Calendar · private menstrual calendar and cycle predictions">
+<meta property="og:description" content="Log periods, flow, symptoms and notes. Get predictions from your own averages. No account, no cloud, no tracking.">
+<meta property="og:url" content="https://tekideki.github.io/Cycle-Calendar/">
+<meta property="og:image" content="https://tekideki.github.io/Cycle-Calendar/screenshots/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="ro_RO">
+<meta property="og:locale:alternate" content="sr_RS">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cycle Calendar · private menstrual calendar">
+<meta name="twitter:description" content="Periods, flow, symptoms and predictions. Everything stays in your browser.">
+<meta name="twitter:image" content="https://tekideki.github.io/Cycle-Calendar/screenshots/og.png">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Cycle Calendar","applicationCategory":"HealthApplication","operatingSystem":"Any (web browser)","url":"https://tekideki.github.io/Cycle-Calendar/","description":"Menstrual calendar with flow, symptom and temperature logging, plus predictions computed from your own cycle history. Data never leaves the browser.","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"author":{"@type":"Person","name":"Kristian Mario Miskovic","alternateName":"TekiDeki"},"license":"https://www.apache.org/licenses/LICENSE-2.0","isAccessibleForFree":true}
+</script>
+</head>
+<body>
+
+<a class="skip-link" href="#main" data-i18n="skipToContent">Skip to calendar</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#calendar" id="brandLink">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-text">
+        <span>Cycle Calendar</span>
+        <span class="brand-tagline" data-i18n="tagline">Private by design</span>
+      </span>
+    </a>
+
+    <div class="tabs" role="tablist" aria-label="Views" id="tabs" data-i18n-aria-label="navViews">
+      <button type="button" role="tab" id="tab-calendar" aria-controls="view-calendar" aria-selected="true" data-view="calendar" data-i18n="navCalendar">Calendar</button>
+      <button type="button" role="tab" id="tab-insights" aria-controls="view-insights" aria-selected="false" data-view="insights" data-i18n="navInsights">Insights</button>
+      <button type="button" role="tab" id="tab-settings" aria-controls="view-settings" aria-selected="false" data-view="settings" data-i18n="navSettings">Settings</button>
+      <button type="button" role="tab" id="tab-about" aria-controls="view-about" aria-selected="false" data-view="about" data-i18n="navAbout">About</button>
+    </div>
+
+    <div class="topbar-actions">
+      <button type="button" class="icon-btn" id="undoBtn" disabled data-i18n-title="undo" title="Undo last change">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>
+        <span data-i18n="undo">Undo</span>
+      </button>
+      <button type="button" class="icon-btn" id="themeBtn" data-i18n-title="themeToggle" title="Switch light or dark theme">
+        <svg class="theme-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.8 6.8 0 0 0 9.8 9.8Z"/></svg>
+        <svg class="theme-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg>
+        <span data-i18n="theme">Theme</span>
+      </button>
+      <label class="sr-only" for="langSelect" data-i18n="language">Language</label>
+      <select id="langSelect" aria-label="Language" data-i18n-aria-label="language">
+        <option value="en">English</option>
+        <option value="ro">Română</option>
+        <option value="sr-latn">Srpski</option>
+        <option value="sr-cyrl">Српски</option>
+      </select>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+
+  <!-- ============================================================ CALENDAR -->
+  <section id="view-calendar" role="tabpanel" aria-labelledby="tab-calendar" data-view-panel="calendar">
+    <div class="summary" id="summary">
+      <div class="stat-card is-accent">
+        <span class="label" data-i18n="cycleDayLabel">Cycle day</span>
+        <span class="value" id="statCycleDay">-</span>
+        <span class="sub" id="statCycleDaySub"></span>
+      </div>
+      <div class="stat-card">
+        <span class="label" data-i18n="nextPeriodLabel">Next period</span>
+        <span class="value" id="statNext">-</span>
+        <span class="sub" id="statNextSub"></span>
+      </div>
+      <div class="stat-card">
+        <span class="label" data-i18n="avgCycle">Average cycle</span>
+        <span class="value" id="statAvg">-</span>
+        <span class="sub" id="statAvgSub"></span>
+      </div>
+      <div class="stat-card is-range">
+        <span class="label" data-i18n="fertileLabel">Fertile window</span>
+        <span class="value" id="statFertile">-</span>
+        <span class="sub" id="statFertileSub"></span>
+      </div>
+    </div>
+
+    <div class="onboard" id="onboard" hidden>
+      <div>
+        <b data-i18n="onboardTitle">Start with your last period</b>
+        <p data-i18n="onboardText">Tap the first day of your most recent period, then pick how heavy the flow was.</p>
+      </div>
+      <button type="button" class="btn btn-sm" id="onboardSample" data-i18n="loadSample">Load sample data</button>
+    </div>
+
+    <div class="calendar-layout">
+      <div class="panel">
+        <div class="cal-head">
+          <h1 class="cal-title" id="calTitle" aria-live="polite">-</h1>
+          <button type="button" class="today-btn" id="todayBtn" data-i18n="today">Today</button>
+          <button type="button" class="nav-btn" id="prevBtn" data-i18n-title="prevMonth" title="Previous month" aria-label="Previous month">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
+          </button>
+          <button type="button" class="nav-btn" id="nextBtn" data-i18n-title="nextMonth" title="Next month" aria-label="Next month">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+          </button>
+        </div>
+
+        <div class="weekdays" id="weekdays" aria-hidden="true"></div>
+        <div class="calendar-grid" id="calendarGrid" role="group" aria-labelledby="calTitle"></div>
+
+        <div class="legend" id="legend">
+          <span class="legend-item"><span class="legend-swatch period"></span><span data-i18n="legendPeriod">Logged period</span></span>
+          <span class="legend-item"><span class="legend-swatch predicted"></span><span data-i18n="legendPredicted">Predicted period</span></span>
+          <span class="legend-item"><span class="legend-swatch fertile"></span><span data-i18n="legendFertile">Fertile window</span></span>
+          <span class="legend-item"><span class="legend-swatch ovulation"></span><span data-i18n="legendOvulation">Estimated ovulation</span></span>
+          <span class="legend-item"><span class="legend-swatch pms"></span><span data-i18n="legendPms">PMS window</span></span>
+          <span class="legend-item"><span class="legend-swatch notes"></span><span data-i18n="legendNotes">Has notes</span></span>
+        </div>
+        <p class="hint" data-i18n="calendarKeyHint">Tip: with a day focused, use the arrow keys to move and Enter to open the editor.</p>
+      </div>
+
+      <aside class="panel editor" id="editor" aria-labelledby="editorDate">
+        <div class="editor-head">
+          <div>
+            <h2 class="editor-date" id="editorDate">-</h2>
+            <p class="editor-sub" id="editorSub"></p>
+          </div>
+          <button type="button" class="editor-close" id="closeEditor" data-i18n-title="close" title="Close" aria-label="Close">&times;</button>
+        </div>
+
+        <div class="field">
+          <span class="field-label" id="lblFlow" data-i18n="flowLabel">Flow</span>
+          <div class="chip-group" role="group" aria-labelledby="lblFlow" id="flowGroup">
+            <button type="button" class="chip flow-none" data-flow="none" aria-pressed="true"><span class="dot"></span><span data-i18n="flowNone">None</span></button>
+            <button type="button" class="chip flow-spotting" data-flow="spotting" aria-pressed="false"><span class="dot"></span><span data-i18n="flowSpotting">Spotting</span></button>
+            <button type="button" class="chip flow-light" data-flow="light" aria-pressed="false"><span class="dot"></span><span data-i18n="flowLight">Light</span></button>
+            <button type="button" class="chip flow-medium" data-flow="medium" aria-pressed="false"><span class="dot"></span><span data-i18n="flowMedium">Medium</span></button>
+            <button type="button" class="chip flow-heavy" data-flow="heavy" aria-pressed="false"><span class="dot"></span><span data-i18n="flowHeavy">Heavy</span></button>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="field-label" id="lblMood" data-i18n="moodsLabel">Mood</span>
+          <div class="chip-group" role="group" aria-labelledby="lblMood" id="moodGroup">
+            <button type="button" class="chip" data-mood="" aria-pressed="true" data-i18n="moodNone">Not set</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="field-label" id="lblSymptoms" data-i18n="symptomsLabel">Symptoms</span>
+          <div class="chip-group" role="group" aria-labelledby="lblSymptoms" id="symptomGroup"></div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="tempInput"><span data-i18n="bbtLabel">Basal temperature</span> (°C)</label>
+          <div class="row">
+            <input class="text-input" type="number" id="tempInput" inputmode="decimal" step="0.01" min="34" max="42" placeholder="36.50">
+            <button type="button" class="btn btn-sm btn-quiet" id="clearTemp" data-i18n="clearField">Clear</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="noteInput" data-i18n="notesLabel">Notes</label>
+          <textarea class="textarea" id="noteInput" maxlength="600" data-i18n-placeholder="notesPlaceholder" placeholder="Anything you want to remember about this day"></textarea>
+        </div>
+
+        <div class="editor-foot">
+          <span class="saved-dot" id="savedDot" aria-live="polite"><span aria-hidden="true">&#10003;</span> <span data-i18n="savedToDay">Saved to this day</span></span>
+          <div class="row">
+            <button type="button" class="btn btn-danger btn-sm" id="clearDay" data-i18n="clearDay">Clear day</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============================================================ INSIGHTS -->
+  <section id="view-insights" role="tabpanel" aria-labelledby="tab-insights" data-view-panel="insights" hidden>
+    <div class="view-head">
+      <div>
+        <h1 data-i18n="insightsTitle">Your patterns</h1>
+        <p data-i18n="insightsHint">Everything here is computed from the days you logged. No averages borrowed from anyone else.</p>
+      </div>
+      <button type="button" class="btn" id="printBtn" data-i18n="printSummary">Print summary</button>
+    </div>
+
+    <div class="insight-grid">
+      <div class="metric">
+        <div class="label" data-i18n="cyclesTracked">Completed cycles</div>
+        <div class="value" id="mCycles">0</div>
+        <div class="sub" data-i18n="cyclesSub">Period start to period start</div>
+      </div>
+      <div class="metric">
+        <div class="label" data-i18n="avgCycle">Average cycle length</div>
+        <div class="value" id="mAvg">-</div>
+        <div class="sub" id="mAvgSub"></div>
+      </div>
+      <div class="metric">
+        <div class="label" data-i18n="avgPeriod">Average period length</div>
+        <div class="value" id="mPeriod">-</div>
+        <div class="sub" id="mPeriodSub"></div>
+      </div>
+      <div class="metric">
+        <div class="label" data-i18n="shortest">Shortest cycle</div>
+        <div class="value" id="mShortest">-</div>
+        <div class="sub" data-i18n="shortestSub">Across completed cycles</div>
+      </div>
+      <div class="metric">
+        <div class="label" data-i18n="longest">Longest cycle</div>
+        <div class="value" id="mLongest">-</div>
+        <div class="sub" data-i18n="longestSub">Across completed cycles</div>
+      </div>
+      <div class="metric">
+        <div class="label" data-i18n="variation">Variation</div>
+        <div class="value" id="mVariation">-</div>
+        <div class="sub" data-i18n="variationSub">Longest minus shortest</div>
+      </div>
+    </div>
+
+    <div class="cards-2">
+      <div class="panel">
+        <h2 data-i18n="chartTitle">Cycle length history</h2>
+        <p class="hint" data-i18n="chartHint">Each bar is one completed cycle, in days.</p>
+        <div class="chart-wrap" id="chartWrap"></div>
+      </div>
+
+      <div class="panel">
+        <h2 data-i18n="predictionTitle">Next three periods</h2>
+        <p class="hint" data-i18n="predictionsHint">Estimated from your own average cycle length. Estimates, not guarantees.</p>
+        <div class="prediction-list" id="predictionList"></div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <h2 data-i18n="historyTitle">Cycle history</h2>
+      <p class="hint" data-i18n="historyHint">Periods are grouped automatically when logged days are adjacent or one day apart.</p>
+      <div class="table-wrap" id="historyWrap"></div>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <h2 data-i18n="symptomsTitle">Most frequent symptoms</h2>
+      <p class="hint" data-i18n="symptomsHint">Counted across every logged day.</p>
+      <div class="chart-wrap" id="symptomChartWrap"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================ SETTINGS -->
+  <section id="view-settings" role="tabpanel" aria-labelledby="tab-settings" data-view-panel="settings" hidden>
+    <div class="view-head">
+      <div>
+        <h1 data-i18n="settingsHeading">Settings</h1>
+        <p data-i18n="settingsLead">Defaults for predictions, plus everything you need to take your data with you.</p>
+      </div>
+    </div>
+
+    <div class="cards-2">
+      <div class="panel">
+        <h2 data-i18n="settingsCycleSection">Cycle defaults</h2>
+        <div class="settings-row">
+          <div>
+            <label for="defCycle" data-i18n="cycleLengthLabel">Default cycle length</label>
+            <p class="hint" data-i18n="defaultCycleHint">Used only until you have logged enough periods to compute an average.</p>
+          </div>
+          <span class="number-control"><input type="number" id="defCycle" min="15" max="60" inputmode="numeric"><span class="unit" data-i18n="daysUnit">days</span></span>
+        </div>
+        <div class="settings-row">
+          <div>
+            <label for="defPeriod" data-i18n="periodLengthLabel">Default period length</label>
+            <p class="hint" data-i18n="defaultPeriodHint">How many days a period usually lasts for you.</p>
+          </div>
+          <span class="number-control"><input type="number" id="defPeriod" min="1" max="14" inputmode="numeric"><span class="unit" data-i18n="daysUnit">days</span></span>
+        </div>
+        <div class="settings-row">
+          <div>
+            <label for="lutealInput" data-i18n="lutealLabel">Luteal phase</label>
+            <p class="hint" data-i18n="lutealHint">Days between ovulation and the next period. 14 is the usual estimate.</p>
+          </div>
+          <span class="number-control"><input type="number" id="lutealInput" min="8" max="18" inputmode="numeric"><span class="unit" data-i18n="daysUnit">days</span></span>
+        </div>
+        <div class="settings-row">
+          <div>
+            <label for="weekStart" data-i18n="weekStartLabel">First day of the week</label>
+            <p class="hint" data-i18n="weekStartHint">Only changes how the calendar is drawn.</p>
+          </div>
+          <select id="weekStart">
+            <option value="1" data-i18n="weekMonday">Monday</option>
+            <option value="0" data-i18n="weekSunday">Sunday</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 data-i18n="dataTitle">Your data</h2>
+        <p class="hint" data-i18n="dataText">Everything is stored in this browser only.</p>
+        <p class="hint" style="margin-top:6px"><span data-i18n="daysLogged">Days logged</span>: <b id="daysCount">0</b></p>
+        <div class="row" style="margin-top:14px;gap:8px">
+          <button type="button" class="btn btn-primary" id="exportBtn" data-i18n="exportJson">Export backup</button>
+          <button type="button" class="btn" id="importBtn" data-i18n="importJson">Import backup</button>
+          <input type="file" id="importFile" accept="application/json,.json" class="sr-only" aria-label="Backup file" tabindex="-1">
+        </div>
+        <p class="hint" data-i18n="backupHint">The backup is a plain JSON file with your logged days and settings. Keep it somewhere safe; it is the only copy that leaves this browser.</p>
+
+        <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--line)">
+          <h2 data-i18n="dangerSection">Remove data</h2>
+          <div class="row" style="margin-top:10px;gap:8px">
+            <button type="button" class="btn btn-danger" id="resetBtn" data-i18n="clearAll">Erase everything</button>
+          </div>
+          <p class="hint" data-i18n="resetHint">Deletes every logged day and restores the default settings. Export a backup first if you might want it back.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <h2 data-i18n="sampleTitle">Not sure where to start?</h2>
+      <p class="hint" data-i18n="sampleHint">Load a sample history of five cycles to see predictions, the chart and the fertile window in action. Your current data is replaced, so export a backup first.</p>
+      <div class="row" style="margin-top:10px">
+        <button type="button" class="btn" id="sampleBtn" data-i18n="loadSample">Load sample data</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================================== ABOUT -->
+  <section id="view-about" role="tabpanel" aria-labelledby="tab-about" data-view-panel="about" hidden>
+    <div class="view-head">
+      <div>
+        <h1 data-i18n="aboutTitle">About Cycle Calendar</h1>
+        <p data-i18n="aboutLead">A menstrual calendar built to be quiet, private and predictable to use.</p>
+      </div>
+    </div>
+
+    <div class="cards-2">
+      <div class="panel prose">
+        <h2 data-i18n="aboutWhatTitle">What it does</h2>
+        <p data-i18n="aboutWhat">Log the days you bleed with a flow level, add symptoms, mood, a note and optionally your basal temperature. The calendar draws your logged periods, predicts the next ones from your own averages, and shades the estimated fertile window, ovulation day and PMS window.</p>
+        <p data-i18n="aboutWhatMore">Insights shows completed cycle lengths, your shortest and longest cycle, the variation between them, the next three predicted periods and the symptoms you log most often.</p>
+
+        <h3 data-i18n="privacyTitle">Privacy</h3>
+        <p data-i18n="privacyText">Everything you enter stays in this browser's local storage on this device. There is no account, no server, no analytics, no advertising and no third party request at runtime. The app is a single HTML file that works offline once loaded.</p>
+        <p data-i18n="privacyText2">The only way data leaves the browser is if you export a backup file yourself or print the summary. Clearing site data, or using a private window that you then close, removes everything.</p>
+
+        <h3 data-i18n="limitsTitle">How predictions work</h3>
+        <p data-i18n="limitsText">The average cycle length is the mean distance between period starts, using your last six completed cycles. The average period length is the mean duration of your last six periods. If you have fewer than two cycles, the defaults from Settings are used instead.</p>
+        <p data-i18n="limitsText2">Estimated ovulation is placed the luteal phase length before the predicted next period, and the fertile window covers the five days before it plus the day itself. Your logged days always win over any estimate.</p>
+
+        <div class="callout">
+          <b data-i18n="disclaimerTitle">Not a medical device</b>
+          <p data-i18n="disclaimerText">Cycle Calendar is a personal tracking tool, not a contraceptive method and not a diagnosis. Cycles vary with stress, illness, travel and medication. Talk to a clinician about contraception, unusual bleeding, cycles shorter than 21 or longer than 35 days, or a period that stops for three months or more.</p>
+        </div>
+      </div>
+
+      <div class="panel prose">
+        <h2 data-i18n="techTitle">Built to last</h2>
+        <p data-i18n="techText">Apache 2.0 licensed, no build framework, no dependencies at runtime, no cookies. The whole app is one HTML file plus a manifest and a service worker for offline use.</p>
+        <div class="table-wrap">
+          <table class="data">
+            <tbody>
+              <tr><th data-i18n="rowStorage">Storage</th><td data-i18n="rowStorageVal">This browser only (localStorage)</td></tr>
+              <tr><th data-i18n="rowNetwork">Network calls</th><td data-i18n="rowNetworkVal">None at runtime</td></tr>
+              <tr><th data-i18n="rowAccount">Account</th><td data-i18n="rowAccountVal">Not required, not possible</td></tr>
+              <tr><th data-i18n="rowLanguages">Languages</th><td data-i18n="rowLanguagesVal">English, Romanian, Serbian (Latin and Cyrillic)</td></tr>
+              <tr><th data-i18n="rowLicense">License</th><td>Apache 2.0</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="about-links">
+          <a href="https://github.com/TekiDeki/Cycle-Calendar" rel="noopener" data-i18n="source">Source code</a>
+          <a href="https://github.com/TekiDeki/TekiDeki" rel="noopener" data-i18n="moreApps">More TekiDeki apps</a>
+          <span id="versionText"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ print only -->
+  <section class="print-report" id="printReport" aria-hidden="true"></section>
+</main>
+
+<footer class="foot wrap">
+  <span>Cycle Calendar &middot; TekiDeki</span>
+  <span data-i18n="license">Apache 2.0 license</span>
+  <span data-i18n="footerOffline">Works offline</span>
+  <span data-i18n="footerPrivacy">No account and no tracking</span>
+  <span><span id="yearText"></span></span>
+</footer>
+
+<dialog class="confirm" id="confirmDialog" aria-labelledby="confirmTitle">
+  <h2 id="confirmTitle"></h2>
+  <p id="confirmText"></p>
+  <div class="row">
+    <button type="button" class="btn" id="confirmCancel" data-i18n="cancel">Cancel</button>
+    <button type="button" class="btn btn-danger" id="confirmOk" data-i18n="clearAll">Erase everything</button>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="cycle.js"></script>
+<script src="i18n/locales.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -906,6 +906,16 @@
     if (!state.storageOk) showToast(t('toastStorage'), 'error');
   }
 
+  function registerWorker() {
+    if (!('serviceWorker' in navigator)) return;
+    if (!/^https?:$/.test(window.location.protocol)) return;
+    navigator.serviceWorker.register('sw.js').catch(function () {
+      /* Offline support is a bonus: a failed registration never breaks the app. */
+    });
+  }
+
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
+  if (document.readyState === 'complete') registerWorker();
+  else window.addEventListener('load', registerWorker);
 })();

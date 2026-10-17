@@ -7,7 +7,7 @@
  */
 'use strict';
 
-var VERSION = '1';
+var VERSION = '2';
 var CACHE = 'cycle-calendar-v' + VERSION;
 var ASSETS = [
   './',

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-version="1">
+<html lang="en" data-version="2">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -2759,10 +2759,20 @@ window.TD_LOCALES = {
     if (!state.storageOk) showToast(t('toastStorage'), 'error');
   }
 
+  function registerWorker() {
+    if (!('serviceWorker' in navigator)) return;
+    if (!/^https?:$/.test(window.location.protocol)) return;
+    navigator.serviceWorker.register('sw.js').catch(function () {
+      /* Offline support is a bonus: a failed registration never breaks the app. */
+    });
+  }
+
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
+  if (document.readyState === 'complete') registerWorker();
+  else window.addEventListener('load', registerWorker);
 })();
 </script>
-<!-- Cycle Calendar 1 · single file build -->
+<!-- Cycle Calendar 2 · single file build -->
 </body>
 </html>

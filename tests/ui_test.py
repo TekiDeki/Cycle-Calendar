@@ -263,6 +263,13 @@ def desktop(browser) -> None:
     page.wait_for_timeout(200)
     eq("desktop: undo restores the erased data", page.locator("#daysCount").inner_text(), "3")
 
+    # ------------------------------------------------------ offline shell
+    page.wait_for_timeout(600)
+    eq("desktop: service worker registers", page.evaluate(
+        "navigator.serviceWorker.getRegistrations().then(r => r.length >= 1)"), True)
+    eq("desktop: the shell is cached", page.evaluate(
+        "caches.keys().then(keys => keys.some(k => k.indexOf('cycle-calendar-v') === 0))"), True)
+
     # -------------------------------------------------------------- errors
     check("desktop: no console errors", not errors.console, " | ".join(errors.console))
     check("desktop: no page errors", not errors.pages, " | ".join(errors.pages))

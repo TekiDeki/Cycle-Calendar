@@ -1025,6 +1025,29 @@ dialog.confirm .row { margin-top: 16px; justify-content: flex-end; }
     transition-duration: 0.001ms !important;
   }
 }
+
+
+
+  /* regula casei: tinte de atingere pe mobil */
+  @media (pointer: coarse), (max-width: 700px) {
+    #tab-calendar { min-height: 34px; display: inline-flex; align-items: center; }
+    #tab-insights { min-height: 34px; display: inline-flex; align-items: center; }
+    #tab-settings { min-height: 34px; display: inline-flex; align-items: center; }
+    #tab-about { min-height: 34px; display: inline-flex; align-items: center; }
+    #undoBtn { min-height: 34px; display: inline-flex; align-items: center; }
+    #themeBtn { min-height: 34px; display: inline-flex; align-items: center; }
+    #langSelect { min-height: 34px; }
+    #onboardSample { min-height: 34px; display: inline-flex; align-items: center; }
+    #closeEditor { min-height: 34px; display: inline-flex; align-items: center; }
+    .chip.flow-none { min-height: 34px; display: inline-flex; align-items: center; }
+    .chip.flow-spotting { min-height: 34px; display: inline-flex; align-items: center; }
+    .chip.flow-light { min-height: 34px; display: inline-flex; align-items: center; }
+    .chip.flow-medium { min-height: 34px; display: inline-flex; align-items: center; }
+    .chip.flow-heavy { min-height: 34px; display: inline-flex; align-items: center; }
+    .chip { min-height: 34px; display: inline-flex; align-items: center; }
+    #clearTemp { min-height: 34px; display: inline-flex; align-items: center; }
+    #clearDay { min-height: 34px; display: inline-flex; align-items: center; }
+  }
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Cycle Calendar","applicationCategory":"HealthApplication","operatingSystem":"Any (web browser)","url":"https://tekideki.github.io/Cycle-Calendar/","description":"Menstrual calendar with flow, symptom and temperature logging, plus predictions computed from your own cycle history. Data never leaves the browser.","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"author":{"@type":"Person","name":"Kristian Mario Miskovic","alternateName":"TekiDeki"},"license":"https://www.apache.org/licenses/LICENSE-2.0","isAccessibleForFree":true}

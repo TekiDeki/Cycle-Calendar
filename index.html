@@ -1026,7 +1026,11 @@ dialog.confirm .row { margin-top: 16px; justify-content: flex-end; }
   }
 }
 
-
+/* ==========================================================================
+   regula casei: ecrane mici si tinte de atingere
+   Aceste blocuri erau lipite direct in index.html generat, deci o rulare de
+   build.py le stergea. Acum traiesc in sursa, la fel ca restul stilurilor.
+   ========================================================================== */
 
   /* regula casei: tinte de atingere pe mobil */
   @media (pointer: coarse), (max-width: 700px) {
@@ -1048,14 +1052,9 @@ dialog.confirm .row { margin-top: 16px; justify-content: flex-end; }
     #clearTemp { min-height: 34px; display: inline-flex; align-items: center; }
     #clearDay { min-height: 34px; display: inline-flex; align-items: center; }
   }
-</style>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"Cycle Calendar","applicationCategory":"HealthApplication","operatingSystem":"Any (web browser)","url":"https://tekideki.github.io/Cycle-Calendar/","description":"Menstrual calendar with flow, symptom and temperature logging, plus predictions computed from your own cycle history. Data never leaves the browser.","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"author":{"@type":"Person","name":"Kristian Mario Miskovic","alternateName":"TekiDeki"},"license":"https://www.apache.org/licenses/LICENSE-2.0","isAccessibleForFree":true}
-</script>
 
-<style id="ecran-mic">
 /* regula casei: ecrane mici (320px) - nimic nu are voie sa iasa din ecran.
-   Blocul sta la finalul <head>, deci invinge stilurile de mai sus fara sa le rescrie. */
+   Blocul sta la finalul foii de stil, deci invinge stilurile de mai sus fara sa le rescrie. */
 @media (max-width: 380px) {
   html, body { max-width: 100%; overflow-x: hidden; }
   img, svg, canvas, video, table { max-width: 100%; }
@@ -1066,8 +1065,7 @@ dialog.confirm .row { margin-top: 16px; justify-content: flex-end; }
   .panel, .card, .sheet, .action, .action-main, .action-side, .source-panel, .panel-heading { min-width: 0; max-width: 100%; }
   .chips, #cityChips { flex-wrap: wrap; }
 }
-</style>
-<style id="tinte-44">
+
 /* regula casei: pe telefon, tinta de atingere are cel putin 44x44px (WCAG 2.5.5, Apple HIG).
    Se aplica doar pe pointer gros sau ecran mic, ca sa nu umfle interfata pe desktop.
    `!important` e intentionat: e un prag de accesibilitate, nu o preferinta de stil, iar
@@ -1115,7 +1113,24 @@ dialog.confirm .row { margin-top: 16px; justify-content: flex-end; }
   /* campurile de fisier sunt suprapuse peste zona de tragere si nu trebuie sa iasa din ea */
   html body :is(input[type="file"], input[type="color"], img, video, canvas) { max-width: 100% !important; }
 }
+
+/* --------------------------------------------------- calendar: tot locul posibil
+   Ziua din calendar e singura tinta sub 44px din aplicatie si nu poate fi mai lata
+   de atat: 7 coloane ori 44px fac 308px, iar peste asta vin spatiile dintre celule
+   si rama. Sub ~360px ecranul pur si simplu nu are loc pentru 7 tinte de 44px, asa
+   ca se recupereaza ce se poate din rama: pagina, panoul si spatiul dintre celule.
+   Nu se micsoreaza textul si nu se ascunde nimic - doar se strange rama, ca celula
+   sa ajunga cat mai aproape de prag. La 360px si peste, tinta iese de 44x44. */
+@media (max-width: 400px) {
+  .wrap, .topbar-inner { padding-left: 10px; padding-right: 10px; }
+  .cal-panel { padding-left: 6px; padding-right: 6px; }
+  .calendar-grid, .weekdays { gap: 2px; }
+  .day { border-radius: 8px; }
+}
 </style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Cycle Calendar","applicationCategory":"HealthApplication","operatingSystem":"Any (web browser)","url":"https://tekideki.github.io/Cycle-Calendar/","description":"Menstrual calendar with flow, symptom and temperature logging, plus predictions computed from your own cycle history. Data never leaves the browser.","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"author":{"@type":"Person","name":"Kristian Mario Miskovic","alternateName":"TekiDeki"},"license":"https://www.apache.org/licenses/LICENSE-2.0","isAccessibleForFree":true}
+</script>
 </head>
 <body>
 
@@ -1195,7 +1210,7 @@ dialog.confirm .row { margin-top: 16px; justify-content: flex-end; }
     </div>
 
     <div class="calendar-layout">
-      <div class="panel">
+      <div class="panel cal-panel">
         <div class="cal-head">
           <h1 class="cal-title" id="calTitle" aria-live="polite">-</h1>
           <button type="button" class="today-btn" id="todayBtn" data-i18n="today">Today</button>

@@ -153,7 +153,14 @@ def load_locales() -> dict[str, dict[str, str]]:
     return data
 
 
-def build() -> str:
+def render() -> str:
+    """Compune pagina si o intoarce ca text, fara sa scrie nimic pe disc.
+
+    Testul care verifica "index.html matches the sources" are nevoie de varianta
+    asta: daca build() ar scrie intai in index.html, comparatia s-ar face cu
+    propriul rezultat si nu ar putea pica niciodata - exact asa au disparut o
+    data, fara sa se vada, blocurile de accesibilitate din foaia de stil.
+    """
     version = read(VERSION_FILE).strip()
     if not re.fullmatch(r"\d+(\.\d+)*", version):
         fail("VERSION must be a dotted number")
@@ -213,6 +220,12 @@ def build() -> str:
     if not html.startswith("<!DOCTYPE html>"):
         fail("index.html must start with the doctype")
 
+    return html
+
+
+def build() -> str:
+    """Scrie index.html din surse si intoarce textul scris."""
+    html = render()
     OUT.write_text(html, encoding="utf-8")
     return html
 

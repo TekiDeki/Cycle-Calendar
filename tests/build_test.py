@@ -79,11 +79,31 @@ check("no slug of Latin survives in Cyrillic prose", lambda: truthy(
 
 # --------------------------------------------------------------------- build
 
-first = build.build()
+# Fisierul comis se citeste INAINTE de orice build. Daca s-ar citi dupa, comparatia
+# de mai jos s-ar face cu rezultatul aceleiasi functii si nu ar putea pica niciodata.
+COMMITTED = (ROOT / "index.html").read_text(encoding="utf-8")
+
+first = build.render()
 digest = hashlib.sha256(first.encode("utf-8")).hexdigest()
-second = build.build()
+second = build.render()
 check("build is deterministic", lambda: eq(
     hashlib.sha256(second.encode("utf-8")).hexdigest(), digest))
+def committed_matches_sources() -> None:
+    if COMMITTED == first:
+        return
+    a, b = COMMITTED.splitlines(), first.splitlines()
+    for i, (x, y) in enumerate(zip(a, b), 1):
+        if x != y:
+            raise AssertionError(
+                f"first difference at line {i}:\n  in index.html: {x[:120]!r}\n  in build:      {y[:120]!r}")
+    longer = "index.html" if len(a) > len(b) else "build"
+    raise AssertionError(f"{longer} has {abs(len(a) - len(b))} extra lines")
+
+
+check("index.html matches the sources", committed_matches_sources)
+# blocul de accesibilitate traieste in src/styles.css, nu lipit in pagina generata
+check("a11y block comes from the stylesheet", lambda: truthy(
+    "min-height: 44px !important" in build.read(build.STYLES)))
 
 version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 check("version is stamped in the page", lambda: truthy(f'data-version="{version}"' in first))
@@ -106,8 +126,6 @@ check("size stays reasonable", lambda: truthy(len(first.encode("utf-8")) < 400_0
 # ---------------------------------------------------------------- packaging
 
 check("index.html is committed at the root", lambda: truthy((ROOT / "index.html").exists()))
-check("index.html matches the sources", lambda: eq(
-    (ROOT / "index.html").read_text(encoding="utf-8"), first))
 check("manifest is valid JSON", lambda: truthy(
     json.loads((ROOT / "manifest.json").read_text(encoding="utf-8"))["name"] == "Cycle Calendar"))
 check("manifest icons exist", lambda: all(

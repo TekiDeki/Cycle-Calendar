@@ -104,14 +104,18 @@ check("index.html matches the sources", committed_matches_sources)
 # blocul de accesibilitate traieste in src/styles.css, nu lipit in pagina generata
 check("a11y block comes from the stylesheet", lambda: truthy(
     "min-height: 44px !important" in build.read(build.STYLES)))
+check("install fallback comes from source", lambda: (
+    truthy('id="td-install-section"' in build.read(build.INSTALL_HTML)),
+    truthy('id="td-install-dialog"' in first),
+    truthy('This button cannot force installation.' in first)))
 
 version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 check("version is stamped in the page", lambda: truthy(f'data-version="{version}"' in first))
 check("single file has no local script references", lambda: truthy(
     not re.search(r'<script[^>]+src="(?!https)', first)))
 check("single file has no stylesheet link", lambda: truthy('<link rel="stylesheet"' not in first))
-check("css is inlined once", lambda: eq(first.count("<style>"), 1))
-check("three scripts inlined", lambda: eq(len(re.findall(r"^<script>$", first, re.M)), 3))
+check("app and install styles are inlined", lambda: eq(first.count("<style>"), 2))
+check("three application scripts are inlined", lambda: eq(len(re.findall(r"^<script>$", first, re.M)), 3))
 check("doctype first", lambda: truthy(first.startswith("<!DOCTYPE html>")))
 check("no em dash", lambda: truthy("\u2014" not in first))
 check("no en dash", lambda: truthy("\u2013" not in first))
@@ -120,7 +124,7 @@ check("no byte order mark", lambda: truthy(
 check("no unresolved template markers", lambda: truthy(
     "<!--INLINE" not in first and "undefined" not in first.split("<body>")[0]))
 check("no literal script close inside the payload", lambda: eq(
-    len(re.findall(r"</script>", first)), 4))
+    len(re.findall(r"</script>", first)), 5))
 check("size stays reasonable", lambda: truthy(len(first.encode("utf-8")) < 400_000))
 
 # ---------------------------------------------------------------- packaging

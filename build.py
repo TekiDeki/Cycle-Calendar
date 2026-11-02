@@ -25,6 +25,7 @@ TEMPLATE = SRC / "template.html"
 STYLES = SRC / "styles.css"
 CYCLE_JS = SRC / "cycle.js"
 APP_JS = SRC / "app.js"
+INSTALL_HTML = SRC / "install.html"
 LOCALES = SRC / "i18n" / "locales.json"
 OUT = ROOT / "index.html"
 VERSION_FILE = ROOT / "VERSION"
@@ -169,8 +170,9 @@ def render() -> str:
     styles = read(STYLES)
     cycle_js = read(CYCLE_JS)
     app_js = read(APP_JS)
+    install_html = read(INSTALL_HTML)
     for name, text in (("template.html", template), ("styles.css", styles),
-                       ("cycle.js", cycle_js), ("app.js", app_js)):
+                       ("cycle.js", cycle_js), ("app.js", app_js), ("install.html", install_html)):
         check_text(name, text)
 
     # A closing script tag inside an inlined script would end the tag early
@@ -212,7 +214,8 @@ def render() -> str:
         html = html.replace(src, "<script>\n" + body.rstrip() + "\n</script>", 1)
 
     html = html.replace('<html lang="en">', '<html lang="en" data-version="' + version + '">', 1)
-    html = html.replace("</body>", "<!-- Cycle Calendar " + version + " · single file build -->\n</body>", 1)
+    release_note = "<!-- Cycle Calendar " + version + " · single file build -->"
+    html = html.replace("</body>", release_note + "\n" + install_html + "</body>", 1)
 
     check_text("index.html", html)
     if "<link rel=\"stylesheet\"" in html or re.search(r'<script src="(?!https://)', html):

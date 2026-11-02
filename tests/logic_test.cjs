@@ -378,6 +378,12 @@ check('the selector offers exactly four languages', () => {
   eq(options.length, 4);
 });
 
+check('built page retains the install fallback', () => {
+  assert.ok(html.includes('id="td-install-section"'));
+  assert.ok(html.includes('id="td-install-dialog"'));
+  assert.ok(html.includes('This button cannot force installation.'));
+});
+
 /* --------------------------------------------------------------- report */
 
 const total = passed + failures.length;

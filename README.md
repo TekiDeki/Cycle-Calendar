@@ -63,10 +63,11 @@ Honest limitations, stated up front:
 | `src/styles.css` | All styles, both themes, responsive rules, print rules, reduced-motion rules. |
 | `src/cycle.js` | The engine: dates, period grouping, statistics, predictions, fertile window, backup validation. Pure functions, no DOM, no storage. |
 | `src/app.js` | UI logic, storage, i18n, rendering, event wiring. |
+| `src/install.html` | Shared, browser-specific installation help and honest native-install fallback. |
 | `src/i18n/locales.json` | `en`, `ro` and `sr-latn`; `sr-cyrl` is generated at build time. |
-| `tests/logic_test.cjs` | 139 assertions on the engine, the locale tables and the built file. |
-| `tests/build_test.py` | 61 assertions on the build: transliteration, determinism, packaging, text hygiene. |
-| `tests/ui_test.py` | 71 Playwright checks on desktop and touch tablet, zero console errors. |
+| `tests/logic_test.cjs` | 140 assertions on the engine, the locale tables and the built file. |
+| `tests/build_test.py` | 63 assertions on the build: transliteration, determinism, packaging, text hygiene. |
+| `tests/ui_test.py` | 76 Playwright checks on desktop and touch tablet, zero console errors. |
 | `tools/make_icons.py` | Draws the icon set and the favicon locally, no external assets. |
 | `tools/make_screenshots.py` | Captures the README screenshots and composes `screenshots/og.png`. |
 | `sw.js` | Service worker, offline app shell. `VERSION` matches `VERSION` and is bumped on every release. |

@@ -270,6 +270,14 @@ def desktop(browser) -> None:
     eq("desktop: the shell is cached", page.evaluate(
         "caches.keys().then(keys => keys.some(k => k.indexOf('cycle-calendar-v') === 0))"), True)
 
+    # ------------------------------------------------------ installation help
+    page.locator("#td-install-button").scroll_into_view_if_needed()
+    eq("desktop: install help button is visible", page.locator("#td-install-button").is_visible(), True)
+    page.locator("#td-install-button").click()
+    eq("desktop: install dialog opens", page.locator("#td-install-dialog").is_visible(), True)
+    page.locator("#td-install-close").click()
+    eq("desktop: install dialog closes", page.locator("#td-install-dialog").is_visible(), False)
+
     # -------------------------------------------------------------- errors
     check("desktop: no console errors", not errors.console, " | ".join(errors.console))
     check("desktop: no page errors", not errors.pages, " | ".join(errors.pages))
